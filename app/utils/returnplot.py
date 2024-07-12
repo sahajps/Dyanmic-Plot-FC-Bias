@@ -117,6 +117,17 @@ def polarity_score(d):
         return 0
     
 def top_entities_sorted(f, s_date, e_date):
+    """
+    Given media house name and date filer returns the unique entities' dic with sentiment associated in desc order of their frequency
+
+    Args:
+        f (str): Media house name
+        s_date (datetime): From date
+        e_date (datetime): To date
+
+    Returns:
+        dic: 
+    """
     df = pd.read_json('data/Topic Sentiment Data/'+f+'.json')
 
     date_objs = []
