@@ -1,8 +1,7 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_socketio import emit
 from . import socketio
 from .utils.plotter import get_plot_data
-#from .utils.returnplot import gen_plot
 
 main = Blueprint('main', __name__)
 
@@ -22,7 +21,7 @@ def about():
 def handle_plot_request(json):
     order_input = json.get('order_input', 'Alphabatic')
     integer_input = json.get('integer_input', 5)
-    start_date_input = json.get('start_date_input', '2024-01-01')
-    end_date_input = json.get('end_date_input', '2024-01-01')
+    start_date_input = json.get('start_date_input', '2023-12-31')
+    end_date_input = json.get('end_date_input', '2018-01-01')
     data = get_plot_data(order_input, integer_input, start_date_input, end_date_input)
     emit('plot_data', data)

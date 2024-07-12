@@ -2,11 +2,25 @@ document.addEventListener('DOMContentLoaded', (event) => {
     var socket = io();
 
     function requestPlotUpdate() {
-        const orderInput = document.getElementById('order-input').value;
-        const integerInput = document.getElementById('integer-input').value;
-        const startDateInput = document.getElementById('start-date-input').value;
-        const endDateInput = document.getElementById('end-date-input').value;
+        let orderInput = document.getElementById('order-input').value;
+        let integerInput = document.getElementById('integer-input').value;
+        let startDateInput = document.getElementById('start-date-input').value;
+        let endDateInput = document.getElementById('end-date-input').value;
 
+        let dateObject1 = new Date(startDateInput);
+        let dateObject2 = new Date(endDateInput);
+        
+        if (dateObject1 > dateObject2) {
+            $('#error-message').text('Resetting date range to default as start date must be less than end date.').show();
+            $('#start-date-input').val('2018-01-01');
+            $('#end-date-input').val('2023-12-31');
+            startDateInput = document.getElementById('start-date-input').value;
+            endDateInput = document.getElementById('end-date-input').value;
+        } else {
+            $('#error-message').hide();
+        }
+
+        console.log(endDateInput)
         socket.emit('request_plot_data', {
             order_input: orderInput,
             integer_input: integerInput,
