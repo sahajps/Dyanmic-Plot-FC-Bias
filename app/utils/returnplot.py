@@ -190,7 +190,11 @@ def gen_plot(order, top_en_no, start_date, end_date):
         values = list(list(PS.values()))
         values.reverse()
 
-        ax.barh(np.arange(len(labels)), values, color=color_map_USA(values))
+        if(f in ['checkyourfact', 'politifact', 'snopes']):
+            ax.barh(np.arange(len(labels)), values, color=color_map_USA(values))
+        else:
+            ax.barh(np.arange(len(labels)), values, color=color_map_IN(values))
+
         ax.text(0.95, 0.95, map_org_name[f], transform=ax.transAxes, fontsize=12, verticalalignment='top', horizontalalignment='right')
 
         midpoint = 0#(np.min(values) + np.max(values)) / 2
