@@ -1,9 +1,20 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from datetime import datetime
 from matplotlib.colors import LinearSegmentedColormap
 
+# below two functions return color code for histogram based on the intensity of Polarity Score
 def color_map_USA(v):
+    """
+    Returns list of RGB color combinations for histogram (For organizations from USA).
+
+    Args:
+        v (list): List of values of polarity score ranging from -1 to 1
+
+    Returns:
+        list: List of RGB values for plot according to the intensity of Polarity Score
+    """
     cm = []
     for i in v:
         if(i>0):
@@ -12,8 +23,16 @@ def color_map_USA(v):
             cm.append((0.7098, 0.2824, 0.5019, abs(i)))
 
     return cm
-
 def color_map_IN(v):
+    """
+    Returns list of RGB color combinations for histogram (For organizations from India).
+
+    Args:
+        v (list): List of values of polarity score ranging from -1 to 1
+
+    Returns:
+        list: List of RGB values for plot according to the intensity of Polarity Score
+    """
     cm = []
     for i in v:
         if(i>0): 
@@ -25,25 +44,50 @@ def color_map_IN(v):
 
 
 def map_en_name(s):
-    if(s=='aap' or s=='bjp' or s=='tmc'):
+    """
+    Returns the entity strings into proper format eg.: narendra modi: Narendra Modi and aap: AAP
+
+    Args:
+        s (str): Political entity
+
+    Returns:
+        str: Political entity in proper form
+    """
+    if(s in ['bjp', 'aap', 'tmc', 'goi', 'rss']):
         return s.upper()
     
     return s.title()
 
-########################################################
+def entity_sent(df):
+    """
+    Returns the dic of entities as key and list of sentiments associated with it. Eg. {Donald Trump: [positive, negative, negative, ....], ...}
 
-def map_to_root(df):
-    top_dic = {}
+    Args:
+        df (dataframe): Pandas dataframe with sentiments named column which contains the entities in an articles and associated sentiment in dic form
+
+    Returns:
+        dic: {Donald Trump: [positive, negative, negative, ....], ...} like dic
+    """
+    en_dic = {}
     for dic in df.sentiments:
         for k in dic:
             try:
-                top_dic[k] += [dic[k]]
+                en_dic[k] += [dic[k]]
             except:
-                top_dic[k] = [dic[k]]
+                en_dic[k] = [dic[k]]
 
-    return top_dic
+    return en_dic
 
 def sent_count(l):
+    """
+    Returns numbers of each kind of sentiments
+
+    Args:
+        l (list): List of sentiments associated with an entity over a range of articles
+
+    Returns:
+        dic: Dic with positive, negative and neutral as keys and their count as values
+    """
     dic = {'positive': 0, 'negative': 0, 'neutral': 0}
     for i in l:
         try:
@@ -54,23 +98,39 @@ def sent_count(l):
     return dic
 
 def polarity_score(d):
+    """
+    Returns the polarity score for a given entity
+
+    Args:
+        d (dic): A dic with number of positive, negative and neutral sentiments
+    
+    Returns:
+        float: Polarity score ranging from -1 to 1
+    """
     P = d['positive']
     N = d['negative']
     T = sum(d.values())
 
     try:
-        return (P-N)/T #, (P*0.0 + N*0.29412)/T #(P, N, T-P-N)
+        return (P-N)/T
     except:
-        return 0 #, 0
+        return 0
     
-def Main(f, y, m):
+def top_entities_sorted(f, s_date, e_date):
     df = pd.read_json('data/Topic Sentiment Data/'+f+'.json')
 
-    if(y!='all'):
-        df = df[df.date_year==y]
-        #df = df[df.date_month.isin(m)]
+    date_objs = []
+    # Loop through the lists and convert to datetime objects
+    for day, month, year in zip(df.date_day, df.date_month, df.date_year):
+        date_str = f"{day} {month} {year}"
+        date_obj = datetime.strptime(date_str, '%d %B %Y')
+        date_objs.append(date_obj)
 
-    top_senti_list = map_to_root(df)
+    df['date'] = date_objs
+
+    df = df[(df.date>=s_date) & (df.date<=e_date)]
+
+    top_senti_list = entity_sent(df)
 
     for k in top_senti_list:
         top_senti_list[k] = sent_count(top_senti_list[k])
@@ -79,11 +139,9 @@ def Main(f, y, m):
 
     return top_senti_list
 
-
-    
 #########################################################################
 
-def gen_plot(top_en_no, start_date, end_date):
+def gen_plot(order, top_en_no, start_date, end_date):
     map_org_name = {'checkyourfact': 'Check Your Fact', 'politifact': 'PolitiFact', 'snopes': 'Snopes', 'altnews': 'Alt News', 'boomlive': 'Boom', 'opindia': 'OpIndia'}
 
     fig, ((ax1), (ax2), (ax3), (ax4), (ax5), (ax6)) = plt.subplots(6, 1, sharex=True, figsize=(7, 1.5*top_en_no))
@@ -98,23 +156,28 @@ def gen_plot(top_en_no, start_date, end_date):
     }
 
     for f,ax in zip(['checkyourfact', 'politifact', 'snopes', 'altnews', 'boomlive', 'opindia'], [ax1, ax2, ax3, ax4, ax5, ax6]):
-        top_senti_list = Main(f, 'all', 'all')
+        top_senti_list = top_entities_sorted(f, start_date, end_date)
 
-        df = pd.DataFrame(columns=['year']+list(top_senti_list)[:top_en_no])
-
-        PS = {'year': 'all'}
-        for k in top_senti_list:
+        top_en = list(top_senti_list)[:top_en_no]
+        PS = {}
+        for k in top_en:
             try:
                 #PS[k] = top_senti_list[k]#polarity_score(top_senti_list[k])
                 PS[k] = polarity_score(top_senti_list[k])
             except:
                 PS[k] = 0
 
-        df.loc[len(df)] = PS
+        #print(order)
+        if(order=='Alphabatic'):
+            PS = dict(sorted(PS.items()))
 
-        labels = list(df.iloc[0].index)[1:]
+        #print(PS)
+
+        labels = list(PS)
+        labels.reverse()
         labels = [map_en_name(i) for i in labels]
-        values = list(df.iloc[0])[1:]
+        values = list(list(PS.values()))
+        values.reverse()
 
         ax.barh(np.arange(len(labels)), values, color=color_map_USA(values))
         ax.text(0.95, 0.95, map_org_name[f], transform=ax.transAxes, fontsize=12, verticalalignment='top', horizontalalignment='right')

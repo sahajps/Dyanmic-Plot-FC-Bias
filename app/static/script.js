@@ -2,11 +2,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     var socket = io();
 
     function requestPlotUpdate() {
+        const orderInput = document.getElementById('order-input').value;
         const integerInput = document.getElementById('integer-input').value;
         const startDateInput = document.getElementById('start-date-input').value;
         const endDateInput = document.getElementById('end-date-input').value;
 
         socket.emit('request_plot_data', {
+            order_input: orderInput,
             integer_input: integerInput,
             start_date_input: startDateInput,
             end_date_input: endDateInput
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // Initial plot update
     requestPlotUpdate();
 
+    document.getElementById('order-input').addEventListener('change', requestPlotUpdate);
     document.getElementById('integer-input').addEventListener('change', requestPlotUpdate);
     document.getElementById('start-date-input').addEventListener('change', requestPlotUpdate);
     document.getElementById('end-date-input').addEventListener('change', requestPlotUpdate);
