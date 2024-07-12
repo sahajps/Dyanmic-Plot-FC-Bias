@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FC Bias</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <!-- <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -17,45 +17,14 @@
         </div>
         <div class="menu">
             <!-- <a href="#">Coverage</a> -->
-            <a href="https://github.com/sahajps/FC-Bias" target="_blank">Paper</a>
+            <!-- <a href="https://github.com/sahajps/FC-Bias" target="_blank">Paper</a> -->
             <a href="https://github.com/sahajps/FC-Bias" target="_blank">Github</a>
             <a href="/about">About</a>
         </div>
     </div>
 
     <div class="container">
-        <form id="input-form" class="mt-4">
-            <div class="form-row d-flex flex-wrap">
-                <div class="form-group col-md-4">
-                    <label for="start-date-input">From:</label>
-                    <input type="date" class="form-control" id="start-date-input" name="start-date-input" value="2018-01-01" required>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="end-date-input">To:</label>
-                    <input type="date" class="form-control" id="end-date-input" name="end-date-input" value="2023-12-31" required>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="integer-input">No. of top entities:</label>
-                    <select class="form-control" id="integer-input" name="integer-input" required>
-                        {% for i in range(5, 16) %}
-                        <option value="{{ i }}" {% if i == 5 %}selected{% endif %}>{{ i }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="order-input">Entities' order:</label>
-                    <select class="form-control" id="order-input" name="order-input" required>
-                        {% for i in ["Alphabatic", "Frequency"] %}
-                        <option value="{{ i }}" {% if i == "Alphabatic" %}selected{% endif %}>{{ i }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary d-none">Update Plot</button>
-        </form>
-        <div class="mt-4">
-            <img id="plot" src="" class="img-fluid">
-        </div>
+        <div class="error-message">This page will be updated soon. Refer to github's README for more details.</div>
     </div>
 </body>
 </html>
