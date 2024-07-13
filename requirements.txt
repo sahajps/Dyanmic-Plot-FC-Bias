@@ -4,3 +4,4 @@ matplotlib
 gunicorn
 pandas
 plotly
+numpy
