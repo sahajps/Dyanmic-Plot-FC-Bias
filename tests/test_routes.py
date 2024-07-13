@@ -1,5 +1,5 @@
 import unittest
-from app import create_app
+from app import create_app # type: ignore
 
 class BasicTests(unittest.TestCase):
     def setUp(self):
@@ -9,6 +9,10 @@ class BasicTests(unittest.TestCase):
 
     def test_index(self):
         response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_about(self):
+        response = self.client.get('/about')
         self.assertEqual(response.status_code, 200)
 
 if __name__ == '__main__':
