@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             $('#error-message').hide();
         }
 
-        console.log(endDateInput)
+        // console.log(endDateInput)
         socket.emit('request_plot_data', {
             order_input: orderInput,
             integer_input: integerInput,
