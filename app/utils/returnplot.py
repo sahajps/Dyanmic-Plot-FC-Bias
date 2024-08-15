@@ -179,7 +179,7 @@ def gen_plot(order, top_en_no, start_date, end_date):
                 PS[k] = 0
 
         #print(order)
-        if(order=='Alphabatic'):
+        if(order=='Alphabetic'):
             PS = dict(sorted(PS.items()))
 
         #print(PS)

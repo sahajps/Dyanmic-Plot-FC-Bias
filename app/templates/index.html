@@ -49,12 +49,12 @@
                     </select>
                 </div>
 
-                <!-- This button provides two options to choose "Alpahbatic" or "Frequency" to decide the order of political enties -->
+                <!-- This button provides two options to choose "Alpahbetic" or "Frequency" to decide the order of political enties -->
                 <div class="form-group col-md-4">
                     <label for="order-input">Entities' order:</label>
                     <select class="form-control" id="order-input" name="order-input" required>
-                        {% for i in ["Alphabatic", "Frequency"] %}
-                        <option value="{{ i }}" {% if i == "Alphabatic" %}selected{% endif %}>{{ i }}</option>
+                        {% for i in ["Alphabetic", "Frequency"] %}
+                        <option value="{{ i }}" {% if i == "Alphabetic" %}selected{% endif %}>{{ i }}</option>
                         {% endfor %}
                     </select>
                 </div>

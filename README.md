@@ -30,7 +30,7 @@ In the paper, the Propensity Score (PS) is shown only for the top 5 entities and
    127.0.0.1:5000/
  ```
 ## Maintenance (For developer)
-There are three subdir-level README files to detail the functionality of [app](), [data](), and [tests]().
+There are three subdir-level README files to detail the functionality of [app](https://github.com/sahajps/FC-PolarityScore/blob/main/app/README.md), [data](https://github.com/sahajps/FC-PolarityScore/blob/main/data/README.md), and [tests](https://github.com/sahajps/FC-PolarityScore/blob/main/tests/README.md).
 The high-level repo looks like the following:
 
 ```plaintext

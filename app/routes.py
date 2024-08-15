@@ -19,9 +19,13 @@ def about():
 
 @socketio.on('request_plot_data')
 def handle_plot_request(json):
-    order_input = json.get('order_input', 'Alphabatic')
+    """
+    This function gets the input conditions' data in json format which we futher use to call the get_data_plot function from plotter module (ours)
+    """
+    order_input = json.get('order_input', 'Alphebetic')
     integer_input = json.get('integer_input', 5)
     start_date_input = json.get('start_date_input', '2023-12-31')
     end_date_input = json.get('end_date_input', '2018-01-01')
+
     data = get_plot_data(order_input, integer_input, start_date_input, end_date_input)
     emit('plot_data', data)
