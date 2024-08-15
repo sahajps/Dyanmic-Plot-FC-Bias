@@ -4,7 +4,11 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from matplotlib.colors import LinearSegmentedColormap
 
-# below two functions return color code for histogram based on the intensity of Polarity Score
+############### Constants #################
+map_org_name = {'checkyourfact': 'Check Your Fact', 'politifact': 'PolitiFact', 'snopes': 'Snopes', 'altnews': 'Alt News', 'boomlive': 'Boom', 'opindia': 'OpIndia'}
+org_names = list(map_org_name) # returns list of keys
+
+#####################################################################################################
 def color_map_USA(v):
     """
     Returns list of RGB color combinations for histogram (For organizations from USA).
@@ -153,20 +157,11 @@ def top_entities_sorted(f, s_date, e_date):
 #########################################################################
 
 def gen_plot(order, top_en_no, start_date, end_date):
-    map_org_name = {'checkyourfact': 'Check Your Fact', 'politifact': 'PolitiFact', 'snopes': 'Snopes', 'altnews': 'Alt News', 'boomlive': 'Boom', 'opindia': 'OpIndia'}
-
     fig, ((ax1), (ax2), (ax3), (ax4), (ax5), (ax6)) = plt.subplots(6, 1, sharex=True, figsize=(7, 1.5*top_en_no))
 
     plt.rcParams['font.size'] = 13
 
-    error_bar_settings = {
-        'ecolor': 'black',  
-        'elinewidth': 0.4,    
-        'capsize': 2,
-        'capthick': 0.4
-    }
-
-    for f,ax in zip(['checkyourfact', 'politifact', 'snopes', 'altnews', 'boomlive', 'opindia'], [ax1, ax2, ax3, ax4, ax5, ax6]):
+    for f,ax in zip(org_names, [ax1, ax2, ax3, ax4, ax5, ax6]):
         top_senti_list = top_entities_sorted(f, start_date, end_date)
 
         top_en = list(top_senti_list)[:top_en_no]
@@ -178,11 +173,8 @@ def gen_plot(order, top_en_no, start_date, end_date):
             except:
                 PS[k] = 0
 
-        #print(order)
         if(order=='Alphabetic'):
             PS = dict(sorted(PS.items()))
-
-        #print(PS)
 
         labels = list(PS)
         labels.reverse()
@@ -190,7 +182,7 @@ def gen_plot(order, top_en_no, start_date, end_date):
         values = list(list(PS.values()))
         values.reverse()
 
-        if(f in ['checkyourfact', 'politifact', 'snopes']):
+        if(f in org_names[:3]): # first three names are of USA's orgs
             ax.barh(np.arange(len(labels)), values, color=color_map_USA(values))
         else:
             ax.barh(np.arange(len(labels)), values, color=color_map_IN(values))

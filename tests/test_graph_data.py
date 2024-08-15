@@ -14,6 +14,10 @@ class BasicTests(unittest.TestCase):
         self.cache_file_path = "data/Test Case(s)/"
 
     def test_plot_data(self):
+        """
+        This function calculates polarity score for top 5 entities of each orgs (2018-2023: all times)
+        At second stages it verify the cached results and print the success or failure
+        """
         for f in self.all_media:
             top_senti_list = top_entities_sorted(f, self.st_date, self.en_date)
             PS = {}
@@ -25,7 +29,7 @@ class BasicTests(unittest.TestCase):
                 C_PS = json.load(json_file)
 
             if PS == C_PS:
-                print("Test case pass for " + f + " :)")
+                print("Test case passed for " + f + " :)")
             else:
                 print("Test case failed for " + f + " :(")
 
